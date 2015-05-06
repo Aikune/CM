@@ -1,0 +1,30 @@
+{
+  "mainFile": "", 
+  "use-tabs": false, 
+  "venv": "", 
+  "relatedProjects": [], 
+  "name": "Net", 
+  "license": "GNU General Public License v3", 
+  "url": "", 
+  "pythonPath": "C:/Program Files (x86)/Kivy-1.8.0-py2.7-win32/kivy.bat", 
+  "preExecScript": "", 
+  "additional_builtins": [], 
+  "programParams": "", 
+  "indentation": 4, 
+  "PYTHONPATH": "", 
+  "supported-extensions": [
+    ".py", 
+    ".html", 
+    ".jpg", 
+    ".png", 
+    ".ui", 
+    ".css", 
+    ".json", 
+    ".js", 
+    ".ini", 
+    ".kv"
+  ], 
+  "project-type": "", 
+  "postExecScript": "", 
+  "description": ""
+}

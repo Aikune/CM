@@ -1,0 +1,200 @@
+<Menu>:
+    size: self.size	
+    Image:
+        size:root.size
+        source:"images/background.jpg"
+    GridLayout:
+        width: root.width/2
+        height: root.height/2
+        cols: 1
+        center: root.center
+        Button:
+            size_hint: 1,.3
+            text: 'Jugar'
+            bold: True
+            background_normal: 'images/button_normal.png'
+            background_down: 'images/button_down.png'
+            font_size: 15
+            #size_hint: 1, 1.5
+            on_release: root.jugar()
+        Button:
+            size_hint: 1,.3
+            text: 'Opciones'
+            bold: True
+            background_normal: 'images/button_normal.png'
+            background_down: 'images/button_down.png'
+            font_size: 15
+            #size_hint: 1, 1.5
+            on_release: root.opciones()
+        Button:
+            size_hint: 1,.3
+            text: 'Salir'
+            bold: True
+            background_normal: 'images/button_normal.png'
+            background_down: 'images/button_down.png'
+            font_size: 15
+            #size_hint: 1, 1.5
+            on_release: root.exit()
+
+<Opciones>
+    #modo_slider: modo_slider
+    volumen: volumen
+    modo1:modo1
+    modo2:modo2
+    orientation: 'vertical'
+    padding: 10
+    spacing: 10
+    size_hint:1,1
+    #modo: modo_slider.value
+    Label:
+        text: 'Modo:'
+    #Slider:
+        #id: modo_slider
+        #range: 1, 2
+    BoxLayout:
+        Label:
+            text:"Defensa"
+        CheckBox:
+            id:modo1
+            group: 'g1'
+            active:True
+            on_active:root.check1(self)
+    BoxLayout:
+        Label:
+            text:"Invasión"
+        CheckBox:
+            id:modo2
+            group:'g1'
+            on_active:root.check2(self)
+    Label:
+        text: 'Dificultad:'
+    BoxLayout:
+        size_hint:1,1
+        Slider:
+            size_hint:0.8,1
+            id: dificultad_slider
+            range: 1,3
+            value: 2
+            step:1
+        Label
+            size_hint:0.2,1
+            text:str(int(dificultad_slider.value))
+    Label:
+        text: 'Volumen:'
+    BoxLayout:
+        size_hint:1,1
+        Slider:
+            id: volumen
+            value: 100
+        Label
+            size_hint:0.2,1
+            text:str(int(volumen.value))
+
+    Button:
+        id: cerrar_opciones
+        text: 'Cerrar'
+        bold: True
+        background_normal: 'images/button_normal.png'
+        background_down: 'images/button_down.png'
+        font_size: 15
+        size_hint: 1, 1.5
+        on_press: root.dismiss_parent()
+
+<Tanque>:
+    size_hint:None,None
+    size:30,30
+    id: tanque
+    pos:self.pos
+    #pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size: self.size	
+    Base:
+        id: base
+        center:root.center
+    Torreta:
+        id: torreta
+        center:root.center
+    Radar:
+        id: radar
+        center:root.center[0]-21,root.center[1]-21
+
+<Base>:
+    size_hint:None,None
+    Image:
+        id:img
+        pos:root.pos
+        source: "images/body.png"
+
+<Torreta>:
+    size_hint:None,None
+    Scatter:
+        id: sc
+        pos:root.pos
+        do_rotate: False
+        do_scale: False
+        do_translation: False
+        rotation: self.rotation
+        Image:
+            source: "images/turret.png"
+
+<Radar>:
+    size_hint:None,None
+    Scatter:
+        pos:root.pos
+        do_rotate: False
+        do_scale: False
+        do_translation: False
+        rotation: root.rotation
+        Image:
+            source: "images/radar.png"
+
+<TanqueMovil>:
+    size_hint:None,None
+    size:30,30
+    id: tanque
+    Base:
+        id: base
+        center:root.center
+    Canon:
+        id: canon
+        center:root.center
+    Radar:
+        id: radar
+        center:root.center[0]-21,root.center[1]-21
+
+<Canon>:
+    size_hint:None,None
+    Scatter:
+        pos:root.pos
+        do_rotate: False
+        do_scale: False
+        do_translation: False
+        Image:
+            source: "images/turret.png"
+
+<Ovni>
+    size_hint:None,None
+    size: 30,30
+    Image:
+        id: imagen
+        pos:root.pos
+        source: "images/ovni.png"
+        size: root.size
+
+<Ovni2>
+    size_hint:None,None
+    size: 30,30
+    Image:
+        id: imagen
+        pos:root.pos
+        source: "images/ovni.png"
+        size: root.size
+
+<Disparo>
+    size_hint:None,None
+    size: 5,5
+    pos: self.pos
+    Image:
+        id: imagen
+        pos:root.pos
+        source: "images/disparo.png"
+        size: root.size
