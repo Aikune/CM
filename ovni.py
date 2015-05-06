@@ -30,7 +30,7 @@ class Ovni (Widget):
                     ch.ids.base.ids.img.texture=self.explosion.texture
                     ch.remove_widget(ch.ids.radar)
                     ch.remove_widget(ch.ids.torreta)
-                    Clock.schedule_once(self.fin,2)
+                    #Clock.schedule_once(self.fin,2)
                 except KeyError:
                     pass
             self.borrar()
@@ -70,7 +70,7 @@ class Ovni2 (Widget):
                     #ch.ids.base.ids.img.source="images/explosion.png"
                     ch.remove_widget(ch.ids.radar)
                     ch.remove_widget(ch.ids.canon)
-                    Clock.schedule_once(self.fin,2)
+                    #Clock.schedule_once(self.fin,2)
                 except KeyError:
                     pass
             self.borrar()
