@@ -10,7 +10,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.utils import boundary
 from kivy.properties import ObjectProperty
 from pygame import mixer
-from pygame.mixer import Sound
+#from pygame.mixer import Sound
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.audio import SoundLoader

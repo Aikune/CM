@@ -7,22 +7,30 @@ import kivy
 kivy.require('1.8.0')
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.uix.floatlayout import FloatLayout
+from kivy.properties import ObjectProperty, NumericProperty
 import thread
 
 HOST = "localhost"
 PORT = 8888
 BUFFER_SIZE = 1024
 
-class Cliente(Widget):
-    s = socket(AF_INET,SOCK_STREAM)
-    cont = 0
 
-    def build (self):
-        print "bbbbbb"
+
+class Cliente(Widget):
+    s=ObjectProperty(None)
+    cont=NumericProperty(0)
+    def __init__(self):
+        super(Cliente, self).__init__()
+        self.s = socket(AF_INET,SOCK_STREAM)
+        #self.s.connect((HOST,PORT))
+        self.cont=0
+        print self.ids
+        thread.start_new_thread(self.iniciar,())
+        #self.iniciar()
+
+    def iniciar(self):
         self.s.connect((HOST,PORT))
-        print "cccccc"
-        while True:
+        while self.cont<4:
             self.cont += 1
             #Diccionario que contiene la informacion sobre el cliente 1
             dictData = {}
@@ -32,26 +40,17 @@ class Cliente(Widget):
 
             #Crear JSON para enviar datos
             msg = json.dumps(dictData)
-            time.sleep(1)
-
+            time.sleep(2)
+            self.ids.mensaje_e.text=msg
             self.s.send(msg)
-            print self.s.recv(BUFFER_SIZE)
 
-
-    def on_close(self):
-        self.s.close()
+            dataServer = self.s.recv(BUFFER_SIZE)
+            self.ids.mensaje_r.text=msg
+            print dataServer
 
 class ClienteApp(App):
-
     def build (self):
-        self.root=FloatLayout()
-        self.root.add_widget(Cliente())
-        #self.iniciar()
-        return self.root
-
-
-
-
+        return Cliente()
 
 if __name__=='__main__':
     ClienteApp().run()
