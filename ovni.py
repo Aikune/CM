@@ -9,6 +9,7 @@ from kivy.core.window import Window
 from kivy.loader import Loader
 from kivy.properties import ObjectProperty
 import random
+import __main__
 
 kivy.require('1.6.0')
 class Ovni (Widget):
@@ -30,7 +31,10 @@ class Ovni (Widget):
                     ch.ids.base.ids.img.texture=self.explosion.texture
                     ch.remove_widget(ch.ids.radar)
                     ch.remove_widget(ch.ids.torreta)
-                    #Clock.schedule_once(self.fin,2)
+                    Clock.unschedule(__main__.TanqueApp.lanzar)
+                    if isinstance(ch,Ovni):
+                        Animation.cancel_all(ch)
+                    Clock.schedule_once(__main__.TanqueApp.fin,1)
                 except KeyError:
                     pass
             self.borrar()
@@ -40,17 +44,29 @@ class Ovni (Widget):
             Animation.cancel_all(self)
             #self.ids.imagen.source="images/explosion.png"
             self.ids.imagen.texture=self.explosion.texture
+            #print self.parent.children
+            for ch in self.parent.children:
+                #print ch
+                if isinstance(ch,__main__.Score):
+                    ch.incrementar()
+            #main.Score.incrementar()
             Clock.schedule_once(self.borrar,0.5)
 
     def borrar(self, *args):
         if self.parent:
             self.parent.remove_widget(self)
 
-    def fin(self, *args):
-        popup = Popup(title='',
-            content=Label(text='Game Over'),
-            size_hint=(None, None), size=(200, 100))
-        popup.open()
+    #def fin(self, *args):
+        #popup = Popup(attach_to=self, title='', size_hint=(0.3, 0.5))
+        #go = __main__.GameOver()
+        #if self.parent:
+            #for ch in self.parent.children:
+                    ##print ch
+                    #if isinstance(ch,__main__.Score):
+                        #punt=ch.puntuacion()
+            #go.ids.score_f.text=str(punt)
+        #popup.content=go
+        #popup.open()
 
 class Ovni2 (Widget):
     explosion=ObjectProperty(None)

@@ -8,7 +8,7 @@ from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.utils import boundary
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, NumericProperty
 from pygame import mixer
 #from pygame.mixer import Sound
 from kivy.clock import Clock
@@ -68,8 +68,28 @@ class Menu(Widget):
             #self.opciones_popup.content.modo_slider.value = boundary(self.app.config.getint('GamePlay', 'Modo'), 1, 2)
         self.opciones_popup.open()
 
+class GameOver (BoxLayout):
+
+    def __init__(self):
+        super(GameOver , self).__init__()
+        pass
+
+class Score(Widget):
+    score=NumericProperty(0)
+    def __init__(self):
+        super(Score, self).__init__()
+        self.score=0
+        #self.ids.score.text=str(self.score)
+
+    def incrementar(self):
+        self.score=self.score+10
+    def puntuacion (self):
+        return self.score
+
 class TanqueApp(App):
     app = ObjectProperty(None)
+    tanque= ObjectProperty(None)
+    score= ObjectProperty(None)
     def build(self):
         mixer.init()
         #snd = Sound("sounds/environment.ogg")
@@ -81,7 +101,10 @@ class TanqueApp(App):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.root= FloatLayout(size=Window.size)
         self.num=1
-        self.root.add_widget(tanque.Tanque(center=(Window.center[0],Window.center[1])))
+        main.TanqueApp.tanque=tanque.Tanque(center=(Window.center[0],Window.center[1]))
+        self.root.add_widget(main.TanqueApp.tanque)
+        main.TanqueApp.score=Score()
+        self.root.add_widget(main.TanqueApp.score)
         self.iniciar()
         return self.root
 
@@ -102,11 +125,24 @@ class TanqueApp(App):
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
+
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
         App.stop(App.get_running_app())
         main.JuegoApp().run()
         return True
 
+    @staticmethod
+    def fin(self):
+        popup = Popup(title='', size_hint=(0.3, 0.5))
+        go = GameOver()
+        go.ids.score_f.text=str(main.TanqueApp.score.score)
+        popup.content=go
+        popup.open()
+        popup.content.ids.cerrar_go.bind (on_press=main.TanqueApp.enviar)
+
+    def enviar(self):
+        App.stop(App.get_running_app())
+        main.JuegoApp().run()
 class Tanque2App(App):
     app = ObjectProperty(None)
     #def __init__(self):
