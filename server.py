@@ -7,7 +7,9 @@ import socket
 import sys
 import json
 import select
-from thread import *    
+import shelve
+import os.path
+from thread import *
  
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = "localhost"
@@ -16,8 +18,25 @@ BUFFER_SIZE = 1024
 lista_sockets = [s]
            
 s.bind((HOST, PORT))
- 
+
 s.listen(2)
+
+def guardarDatosBD(data):
+
+    if os.path.isfile("BD_tanques.json"):
+        
+        fh = open("BD_tanques.json", 'r')
+        db = json.load(fh)
+        lineaBD = db + data
+        archivo = open("BD_tanques.json", 'w')
+        json.dump(lineaBD, archivo)
+        print "El fichero existe"
+        
+    else:
+        archivo = open("BD_tanques.json", 'w')
+        json.dump(data, archivo)
+        print "El fichero no existe"
+        
 
 print "Bienvenido al servidor"
 
@@ -34,18 +53,19 @@ while True:
             lista_sockets.append(conn)
         else:
             data = x.recv(BUFFER_SIZE)
+
             if data:
                 for i in lista_sockets:
                     if i is not s:
                         i.send(data)
+                        guardarDatosBD(data)
+                        print data
+                        
             else:
                 x.close()
                 lista_sockets.remove(x)
 s.close()
 
-    #start_new_thread(clientthread,(conn,))
-
-#s.close()
 
 '''
 print "Direccion de la conexion " + str(addr)
