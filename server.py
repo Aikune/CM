@@ -21,20 +21,28 @@ s.bind((HOST, PORT))
 
 s.listen(2)
 
-def guardarDatosBD(data):
+def buscarPuntuaciones():
+    fh = open("BD_tanques.json", 'r')
+    db = json.load(fh)
+    print db
 
+def guardarDatosBD(data):
+    
     if os.path.isfile("BD_tanques.json"):
         
-        fh = open("BD_tanques.json", 'r')
-        db = json.load(fh)
-        lineaBD = db + data
+        dictRecibidos = json.loads(data)
+        db = json.load(open('BD_tanques.json'))
+        
+        lineaBD = db
         archivo = open("BD_tanques.json", 'w')
         json.dump(lineaBD, archivo)
         print "El fichero existe"
         
     else:
+        diccionario = {'1':''}
         archivo = open("BD_tanques.json", 'w')
-        json.dump(data, archivo)
+        diccionario["1"] = data
+        json.dump(diccionario, archivo)
         print "El fichero no existe"
         
 
@@ -62,8 +70,11 @@ while True:
                         print data
                         
             else:
+                #buscarPuntuaciones()
                 x.close()
                 lista_sockets.remove(x)
+                
+
 s.close()
 
 
