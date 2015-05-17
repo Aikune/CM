@@ -1,13 +1,20 @@
-<Menu>:
-    size: self.size	
+<IntroScreen>:
+    size: self.size
+    Image:
+        source: 'images/072.zip'
+        size:root.size
+        #source: 'images/intro.png'
+        anim_delay: 0.1
+
+<MenuScreen>:
+    size: self.size
     Image:
         size:root.size
         source:"images/background.jpg"
     GridLayout:
-        width: root.width/2
-        height: root.height/2
+        size_hint: .25, .25
         cols: 1
-        center: root.center
+        pos: root.center_x - root.center_x/4. , root.center_y - root.center_y/4.
         Button:
             size_hint: 1,.3
             text: 'Jugar'
@@ -15,7 +22,6 @@
             background_normal: 'images/button_normal.png'
             background_down: 'images/button_down.png'
             font_size: 15
-            #size_hint: 1, 1.5
             on_release: root.jugar()
         Button:
             size_hint: 1,.3
@@ -24,7 +30,6 @@
             background_normal: 'images/button_normal.png'
             background_down: 'images/button_down.png'
             font_size: 15
-            #size_hint: 1, 1.5
             on_release: root.opciones()
         Button:
             size_hint: 1,.3
@@ -33,79 +38,114 @@
             background_normal: 'images/button_normal.png'
             background_down: 'images/button_down.png'
             font_size: 15
-            #size_hint: 1, 1.5
             on_release: root.exit()
 
-<Opciones>
-    #modo_slider: modo_slider
+<GameScreen>:
+	FloatLayout:
+	    id: layout
+
+<GameOver>
+    size_hint: 0.3, 0.5
+    BoxLayout:
+        center_x:self.center_x
+        orientation: 'vertical'
+        Label:
+            text: 'GAME OVER'
+        BoxLayout:
+            Label:
+                text: 'Puntuación:'
+            Label:
+                id: score_f
+                text: ""
+        Label:
+            text: "Introduce tus iniciales"
+        GridLayout:
+            cols:3
+            Vacio:
+                size_hint: 0.3,1
+            InicialesInput:
+                multiline:False
+                id: iniciales
+                size_hint: 0.3, 1
+                #pos: root.center_x,root.center_y
+                font_size: 30
+                text: "AAA"
+            Vacio:
+                size_hint: 0.3,1
+        Button:
+            id: cerrar_go
+            text: 'Aceptar'
+            bold: True
+            background_normal: 'images/button_normal.png'
+            background_down: 'images/button_down.png'
+            font_size: 15
+            size_hint: 1, 1.5
+            on_release: root.enviar()
+
+<Score>
+    pos_hint_y: 0
+    BoxLayout:
+        Label:
+            text: "SCORE"
+        Label:
+            id: score
+            text: str(root.score)
+
+<OpcionesScreen>
     volumen: volumen
     modo1:modo1
     modo2:modo2
-    orientation: 'vertical'
-    padding: 10
-    spacing: 10
-    size_hint:1,1
-    #modo: modo_slider.value
-    Label:
-        text: 'Modo:'
-    #Slider:
-        #id: modo_slider
-        #range: 1, 2
     BoxLayout:
-        Label:
-            text:"Defensa"
-        CheckBox:
-            id:modo1
-            group: 'g1'
-            on_active:root.check1(self)
-    BoxLayout:
-        Label:
-            text:"Invasión"
-        CheckBox:
-            id:modo2
-            group:'g1'
-            active:True
-            on_active:root.check2(self)
-    Label:
-        text: 'Dificultad:'
-    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
         size_hint:1,1
-        Slider:
-            size_hint:0.8,1
-            id: dificultad_slider
-            range: 1,3
-            value: 2
-            step:1
-        Label
-            size_hint:0.2,1
-            text:str(int(dificultad_slider.value))
-    Label:
-        text: 'Volumen:'
-    BoxLayout:
-        size_hint:1,1
-        Slider:
-            id: volumen
-            value: 100
-        Label
-            size_hint:0.2,1
-            text:str(int(volumen.value))
-
-    Button:
-        id: cerrar_opciones
-        text: 'Cerrar'
-        bold: True
-        background_normal: 'images/button_normal.png'
-        background_down: 'images/button_down.png'
-        font_size: 15
-        size_hint: 1, 1.5
-        on_press: root.dismiss_parent()
+        Label:
+            text: 'Modo:'
+        BoxLayout:
+            Label:
+                text:"Defensa"
+            CheckBox:
+                id:modo1
+                group: 'g1'
+                active:True
+                on_active:root.check1(self)
+        BoxLayout:
+            Label:
+                text:"Invasión"
+            CheckBox:
+                id:modo2
+                group:'g1'
+                on_active:root.check2(self)
+        Label:
+            text: 'Dificultad:'
+        BoxLayout:
+            size_hint:1,1
+            Slider:
+                size_hint:0.8,1
+                id: dificultad_slider
+                range: 1,3
+                value: 2
+                step:1
+            Label
+                size_hint:0.2,1
+                text:str(int(dificultad_slider.value))
+        Label:
+            text: 'Volumen:'
+        BoxLayout:
+            size_hint:1,1
+            Slider:
+                id: volumen
+                value: self.value
+            Label
+                size_hint:0.2,1
+                text:str(int(volumen.value))
 
 <Tanque>:
     size_hint:None,None
     size:30,30
     id: tanque
     pos:self.pos
-    #pos_hint: {'center_x': 0.5, 'center_y': 0.5}
     size: self.size	
     Base:
         id: base
@@ -180,15 +220,6 @@
         source: "images/ovni.png"
         size: root.size
 
-<Ovni2>
-    size_hint:None,None
-    size: 30,30
-    Image:
-        id: imagen
-        pos:root.pos
-        source: "images/ovni.png"
-        size: root.size
-
 <Disparo>
     size_hint:None,None
     size: 5,5
@@ -198,3 +229,4 @@
         pos:root.pos
         source: "images/disparo.png"
         size: root.size
+
