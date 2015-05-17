@@ -15,7 +15,8 @@ def crear_BD():
     sql = '''CREATE TABLE IF NOT EXISTS PUNTUACION(
     ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     USUARIO VARCHAR(3) NOT NULL,
-    PUNTUACION INTEGER
+    PUNTUACION INTEGER,
+    MODO INTEGER
     )'''
     
     if (consulta.execute(sql)):
@@ -27,15 +28,15 @@ def crear_BD():
     conexion.commit()
     conexion.close()
     
-def insertar_datos_BD(usuario, puntuacion):
+def insertar_datos_BD(usuario, puntuacion, modo):
     
     conexion = sqlite3.connect("tanque.sqlite3")
     consulta = conexion.cursor()
     
-    argumentos = (usuario, puntuacion)
+    argumentos = (usuario, puntuacion, modo)
     
-    sql = '''INSERT INTO PUNTUACION(usuario, puntuacion)
-    VALUES (?, ?)
+    sql = '''INSERT INTO PUNTUACION(usuario, puntuacion, modo)
+    VALUES (?, ?, ?)
     '''
     
     if (consulta.execute(sql, argumentos)):
@@ -47,18 +48,18 @@ def insertar_datos_BD(usuario, puntuacion):
     conexion.commit()
     conexion.close()
     
-def seleccionar_datos_BD():
+def seleccionar_datos_BD(modo):
     
     conexion = sqlite3.connect("tanque.sqlite3")
     consulta = conexion.cursor()
     
-    sql = '''SELECT * FROM PUNTUACION ORDER BY PUNTUACION DESC
+    sql = '''SELECT * FROM PUNTUACION WHERE MODO='''+modo+''' ORDER BY PUNTUACION DESC
     '''
     
     if (consulta.execute(sql)):
         filas = consulta.fetchall()
         for fila in filas:
-            print (fila[0], fila[1], fila[2])
+            print (fila[0], fila[1], fila[2], fila[3])
             
     consulta.close()
     conexion.commit()
@@ -92,7 +93,7 @@ while True:
         
         if x == s:
             conn, addr = s.accept()
-            #print ('Address:',addr)
+            print ('Address:',addr)
     
             lista_sockets.append(conn)
         else:
@@ -102,9 +103,8 @@ while True:
                 for i in lista_sockets:
                     if i is not s:
                         dicc = json.loads(data)
-                        insertar_datos_BD(dicc["usuario"],dicc["puntuacion"])
-                        filas = seleccionar_datos_BD()
-                        print filas
+                        insertar_datos_BD(dicc["usuario"],dicc["puntuacion"],dicc["modo"])
+                        filas = seleccionar_datos_BD(dicc["modo"])
                         i.send(json.dumps(filas))
                         
             else:

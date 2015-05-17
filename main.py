@@ -17,7 +17,11 @@ import random
 import tanque
 import ovni
 import soundlib
+import socket
+import json
+import time
 
+ranking = []
 
 class Principal(ScreenManager):
     app = ObjectProperty(None)
@@ -187,7 +191,6 @@ class Game2Screen(GameScreen):
             self.ids.layout.add_widget(ovni.Ovni2(pos=self.posicion(), vel=self.velocidad()))
         self.num = self.num + 1
 
-
 class GameOver (Popup):
 
     def __init__(self, **kwargs):
@@ -196,17 +199,59 @@ class GameOver (Popup):
         self.auto_dismiss = False
 
     def enviar(self, **kwargs):
-        self.dismiss()
         for ch in self.parent.children:
             if isinstance(ch, ScreenManager):
                 print self.ids.iniciales.text
                 print self.ids.score_f.text
+                print ch.app.config.get('GamePlay' , 'Modo')
+
+                HOST = "localhost"
+                PORT = 8888
+                BUFFER_SIZE = 1024
+                
+                s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+                
+                s.connect((HOST,PORT))
+                
+                dictData = {}
+                
+                dictData["usuario"] = self.ids.iniciales.text
+                dictData["puntuacion"] = self.ids.score_f.text
+                dictData["modo"] = ch.app.config.get('GamePlay' , 'Modo')
+                #Crear JSON para enviar datos
+                msg = json.dumps(dictData)
+            
+                s.send(msg)
+                
+                dataServer = s.recv(BUFFER_SIZE)
+                
+                listaPuntuaciones = json.loads(dataServer)
+                
+                for i in listaPuntuaciones:
+                    ranking.append(i)
+                
+                print ranking
+                s.close()
+        self.go = Ranking()
+        self.go.open()
+
+class Ranking (Popup):
+    def __init__(self, **kwargs):
+        super(Ranking, self).__init__()
+        self.title = "Ranking"
+        self.auto_dismiss = False
+    
+    def puntuaciones(self, **kwargs):
+        return ranking
+
+    def enviar(self, **kwargs):
+        self.dismiss()
+        for ch in self.parent.parent.children:
+            if isinstance(ch, ScreenManager):
                 ch.current = 'Menu'
-
-
+    
 class Vacio (Widget):
     pass
-
 
 class InicialesInput(TextInput):
 
@@ -249,10 +294,11 @@ class JuegoApp(App):
         config.adddefaultsection('GamePlay')
         config.setdefault('GamePlay', 'Modo', '1')
         config.setdefault('GamePlay', 'Dificultad', '2')
-
-
+            
+            
 if __name__ == '__main__':
     JuegoApp().run()
+    
 
 
 #HOST = "localhost"

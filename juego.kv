@@ -80,6 +80,64 @@
             size_hint: 1, 1.5
             on_release: root.enviar()
 
+<Ranking>
+    size_hint: 0.7, 0.7
+    BoxLayout:
+        center_x:self.center_x
+        orientation: 'vertical'
+        BoxLayout:
+        	size_hint: 1, 0.3
+        	Label:
+            	text: 'Posición'
+            Label:
+            	text: 'Iniciales'
+            Label:
+            	text: 'Puntuación'
+        GridLayout:
+            cols:3
+			Label:
+			    text: '1'
+			Label:
+			    text: str(root.puntuaciones()[0][1])
+			Label:
+				text: str(root.puntuaciones()[0][2])
+			Label:
+			    text: '2'
+			Label:
+			    text: root.puntuaciones()[1][1]
+			Label:
+				text: str(root.puntuaciones()[1][2])
+			Label:
+			    text: '3'
+			Label:
+			    text: root.puntuaciones()[2][1]
+			Label:
+				text: str(root.puntuaciones()[2][2])
+			Label:
+			    text: '4'
+			Label:
+			    text: root.puntuaciones()[3][1]
+			Label:
+				text: str(root.puntuaciones()[3][2])
+			Label:
+			    text: '5'
+			Label:
+			    text: root.puntuaciones()[4][1]
+			Label:
+				text: str(root.puntuaciones()[4][2])
+			
+        
+        Button:
+            id: cerrar_go
+            text: 'Aceptar'
+            bold: True
+            background_normal: 'images/button_normal.png'
+            background_down: 'images/button_down.png'
+            font_size: 15
+            size_hint: 1, 0.5
+            on_release: root.enviar()
+
+
 <Score>
     pos_hint_y: 0
     BoxLayout:
