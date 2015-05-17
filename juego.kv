@@ -1,10 +1,8 @@
-#FIXME: radar
 <IntroScreen>:
     size: self.size
     Image:
         source: 'images/072.zip'
         size:root.size
-        #source: 'images/intro.png'
         anim_delay: 0.1
 
 <MenuScreen>:
@@ -68,7 +66,6 @@
                 multiline:False
                 id: iniciales
                 size_hint: 0.3, 1
-                #pos: root.center_x,root.center_y
                 font_size: 30
                 text: "AAA"
             Vacio:
@@ -93,9 +90,6 @@
             text: str(root.score)
 
 <OpcionesScreen>
-    #volumen: volumen
-    #modo1:modo1
-    #modo2:modo2
     BoxLayout:
         orientation: 'vertical'
         padding: 10
@@ -156,7 +150,7 @@
         center:root.center
     Radar:
         id: radar
-        center:root.center[0]-21,root.center[1]-21
+        center:root.center
 
 <Base>:
     size_hint:None,None
@@ -180,7 +174,7 @@
 <Radar>:
     size_hint:None,None
     Scatter:
-        pos:root.pos
+        center: root.center
         do_rotate: False
         do_scale: False
         do_translation: False
@@ -200,7 +194,7 @@
         center:root.center
     Radar:
         id: radar
-        center:root.center[0]-21,root.center[1]-21
+        center:root.center
 
 <Canon>:
     size_hint:None,None

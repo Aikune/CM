@@ -23,7 +23,6 @@ class TanqueMovil (Widget):
     pass
 
 
-
 class Base (Widget):
     pass
 
@@ -41,16 +40,17 @@ class Torreta (Widget):
         y = (touch.y - self.center[1])
         x = (touch.x - self.center[0])
         calc = math.degrees(math.atan2(y, x))
-        new_angle = calc if calc > 0 else 360+calc
-        self.ids.sc.rotation= new_angle -90
+        new_angle = calc if calc > 0 else 360 + calc
+        self.ids.sc.rotation = new_angle - 90
         self.snd.play()
 
 
 class Radar (Widget):
     rotation = NumericProperty(45)
+
     def __init__(self, **kwargs):
         super(Radar, self).__init__(**kwargs)
-        Clock.schedule_interval(self.update, 1/60.)
+        Clock.schedule_interval(self.update, 1 / 60.)
 
     def update(self, *args):
         self.rotation = self.rotation + 3
@@ -58,18 +58,18 @@ class Radar (Widget):
 
 class Canon (Widget):
     def on_touch_down(self, touch):
-        self.parent.pos[0]=touch.x
+        self.parent.pos[0] = touch.x
         self.parent.parent.add_widget(Disparo(pos=self.center))
         soundlib.s['shot'].play()
 
 
 class Disparo(Widget):
-    explosion=ObjectProperty(None)
+    explosion = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(Disparo, self).__init__(**kwargs)
-        self.explosion=Loader.image("images/explosion.png")
-        Clock.schedule_interval(self.update, 1/60.)
+        self.explosion = Loader.image("images/explosion.png")
+        Clock.schedule_interval(self.update, 1 / 60.)
 
     def borrar(self, *args):
         if self.parent:
@@ -79,11 +79,11 @@ class Disparo(Widget):
         self.pos[1] = self.pos[1] + 3
         if self.parent:
             for ch in self.parent.children:
-                if self.collide_widget(ch) & isinstance(ch,ovni.Ovni2):
+                if self.collide_widget(ch) & isinstance(ch, ovni.Ovni2):
                     Animation.cancel_all(ch)
-                    ch.ids.imagen.texture=self.explosion.texture
-                    Clock.schedule_once(ch.borrar,0.5)
+                    ch.ids.imagen.texture = self.explosion.texture
+                    Clock.schedule_once(ch.borrar, 0.5)
                     for ch in self.parent.children:
-                        if isinstance(ch,__main__.Score):
+                        if isinstance(ch, __main__.Score):
                             ch.incrementar()
                     self.borrar()

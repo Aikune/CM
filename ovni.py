@@ -42,7 +42,6 @@ class Ovni(Widget):
 class Ovni1(Ovni):
     def __init__(self, **kwargs):
         super(Ovni1, self).__init__(**kwargs)
-        print kwargs['vel']
         anim = Animation(x=Window.center[0], y=Window.center[1], duration=kwargs['vel'])
         anim.start(self)
         anim.bind(on_complete=self.impacto)
