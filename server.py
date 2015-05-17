@@ -85,6 +85,7 @@ print "Bienvenido al servidor"
 
 crear_BD()
 
+
 while True:
     
     inputReady, outputReady, exceptReady = select.select(lista_sockets, [], [])

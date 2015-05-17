@@ -242,6 +242,8 @@ class Ranking (Popup):
         self.auto_dismiss = False
     
     def puntuaciones(self, **kwargs):
+        print len(ranking)
+        print ranking
         return ranking
 
     def enviar(self, **kwargs):
