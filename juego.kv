@@ -1,3 +1,4 @@
+#FIXME: radar
 <IntroScreen>:
     size: self.size
     Image:
@@ -92,9 +93,9 @@
             text: str(root.score)
 
 <OpcionesScreen>
-    volumen: volumen
-    modo1:modo1
-    modo2:modo2
+    #volumen: volumen
+    #modo1:modo1
+    #modo2:modo2
     BoxLayout:
         orientation: 'vertical'
         padding: 10
@@ -123,13 +124,13 @@
             size_hint:1,1
             Slider:
                 size_hint:0.8,1
-                id: dificultad_slider
+                id: dificultad
                 range: 1,3
                 value: 2
                 step:1
             Label
                 size_hint:0.2,1
-                text:str(int(dificultad_slider.value))
+                text:str(int(dificultad.value))
         Label:
             text: 'Volumen:'
         BoxLayout:

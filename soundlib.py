@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from pygame.mixer import Sound
-s={}
+s = {}
 s['env'] = Sound('sounds/environment.ogg')
 s['shot'] = Sound('sounds/shot.ogg')
 s['click'] = Sound('sounds/click.ogg')
