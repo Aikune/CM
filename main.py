@@ -204,24 +204,31 @@ class GameOver (Popup):
                 PORT = 8888
                 BUFFER_SIZE = 1024
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.connect((HOST, PORT))
-                dictData = {}
-                dictData["usuario"] = self.ids.iniciales.text
-                dictData["puntuacion"] = self.ids.score_f.text
-                dictData["modo"] = ch.app.config.get('GamePlay', 'Modo')
-                msg = json.dumps(dictData)
-                s.send(msg)
-                dataServer = s.recv(BUFFER_SIZE)
-                s.close()
-                listaPuntuaciones = json.loads(dataServer)
-                r = Ranking()
-                for item in listaPuntuaciones:
-                    l1 = Puntuacion(text=str(item[0]))
-                    l2 = Puntuacion(text=str(item[1]), color=(0.5, 0.5, 1, 1))
-                    r.ids.punt.add_widget(l1)
-                    r.ids.punt.add_widget(l2)
-                self.title = 'Ranking'
-                self.content = r
+                try:
+                    s.connect((HOST, PORT))
+                    dictData = {}
+                    dictData["usuario"] = self.ids.iniciales.text
+                    dictData["puntuacion"] = self.ids.score_f.text
+                    dictData["modo"] = ch.app.config.get('GamePlay', 'Modo')
+                    msg = json.dumps(dictData)
+                    s.send(msg)
+                    dataServer = s.recv(BUFFER_SIZE)
+                    s.close()
+                    listaPuntuaciones = json.loads(dataServer)
+                    r = Ranking()
+                    for item in listaPuntuaciones:
+                        l1 = Puntuacion(text=str(item[0]))
+                        l2 = Puntuacion(text=str(item[1]), color=(0.5, 0.5, 1, 1))
+                        r.ids.punt.add_widget(l1)
+                        r.ids.punt.add_widget(l2)
+                    self.title = 'Ranking'
+                    self.content = r
+                except socket.error, msg:
+                    print "No se pudo conectar con el servidor: %s" % msg
+                    self.dismiss()
+                    for ch in self.parent.children:
+                        if isinstance(ch, ScreenManager):
+                            ch.current = 'Menu'
 
 
 class Ranking (Widget):
