@@ -1,0 +1,4 @@
+*.pyc
+*.nja
+*.sqlite3
+juego.ini
