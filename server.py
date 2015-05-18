@@ -5,7 +5,6 @@ from thread import *
 import sqlite3
 
 
-
 def crear_BD():
     conexion = sqlite3.connect("tanque.sqlite3")
 
