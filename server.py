@@ -51,7 +51,8 @@ def seleccionar_datos_BD(modo):
     conexion = sqlite3.connect("tanque.sqlite3")
     consulta = conexion.cursor()
 
-    sql = '''SELECT usuario, puntuacion FROM PUNTUACION WHERE MODO=''' + modo + ''' ORDER BY PUNTUACION DESC LIMIT 5
+    sql = '''SELECT usuario, puntuacion FROM PUNTUACION WHERE MODO=''' + modo + '''
+    ORDER BY PUNTUACION DESC LIMIT 5
     '''
 
     if (consulta.execute(sql)):

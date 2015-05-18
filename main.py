@@ -32,14 +32,14 @@ class IntroScreen(Screen):
         self.manager.current = 'Menu'
 
     def on_leave(self):
-        soundlib.s['music'].play(loops=-1)
+        soundlib.s['music'].play()
 
 
 class MenuScreen(Screen):
 
     def on_enter(self):
         for item in soundlib.s:
-            soundlib.s[item].set_volume(self.manager.app.config.getint('General', 'Sound') / 100.0)
+            soundlib.s[item].volume = self.manager.app.config.getint('General', 'Sound') / 100.0
 
     def exit(self):
         sys.exit(0)
@@ -113,7 +113,7 @@ class GameScreen(Screen):
         self.go = None
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self, 'text')
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
-        soundlib.s['env'].play(loops=-1)
+        soundlib.s['env'].play()
         self.score = Score()
         self.ids.layout.add_widget(self.score)
 
