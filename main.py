@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-#FIXME: radar
 import kivy
 kivy.require('1.8.0')
 
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
@@ -19,9 +19,7 @@ import ovni
 import soundlib
 import socket
 import json
-import time
 
-ranking = []
 
 class Principal(ScreenManager):
     app = ObjectProperty(None)
@@ -191,6 +189,7 @@ class Game2Screen(GameScreen):
             self.ids.layout.add_widget(ovni.Ovni2(pos=self.posicion(), vel=self.velocidad()))
         self.num = self.num + 1
 
+
 class GameOver (Popup):
 
     def __init__(self, **kwargs):
@@ -201,57 +200,46 @@ class GameOver (Popup):
     def enviar(self, **kwargs):
         for ch in self.parent.children:
             if isinstance(ch, ScreenManager):
-                print self.ids.iniciales.text
-                print self.ids.score_f.text
-                print ch.app.config.get('GamePlay' , 'Modo')
-
                 HOST = "localhost"
                 PORT = 8888
                 BUFFER_SIZE = 1024
-                
-                s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                
-                s.connect((HOST,PORT))
-                
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.connect((HOST, PORT))
                 dictData = {}
-                
                 dictData["usuario"] = self.ids.iniciales.text
                 dictData["puntuacion"] = self.ids.score_f.text
-                dictData["modo"] = ch.app.config.get('GamePlay' , 'Modo')
-                #Crear JSON para enviar datos
+                dictData["modo"] = ch.app.config.get('GamePlay', 'Modo')
                 msg = json.dumps(dictData)
-            
                 s.send(msg)
-                
                 dataServer = s.recv(BUFFER_SIZE)
-                
-                listaPuntuaciones = json.loads(dataServer)
-                
-                for i in listaPuntuaciones:
-                    ranking.append(i)
-                
-                print ranking
                 s.close()
-        self.go = Ranking()
-        self.go.open()
+                listaPuntuaciones = json.loads(dataServer)
+                r = Ranking()
+                for item in listaPuntuaciones:
+                    l1 = Puntuacion(text=str(item[0]))
+                    l2 = Puntuacion(text=str(item[1]), color=(0.5, 0.5, 1, 1))
+                    r.ids.punt.add_widget(l1)
+                    r.ids.punt.add_widget(l2)
+                self.title = 'Ranking'
+                self.content = r
 
-class Ranking (Popup):
-    def __init__(self, **kwargs):
-        super(Ranking, self).__init__()
-        self.title = "Ranking"
-        self.auto_dismiss = False
-    
-    def puntuaciones(self, **kwargs):
-        return ranking
 
-    def enviar(self, **kwargs):
-        self.dismiss()
-        for ch in self.parent.parent.children:
+class Ranking (Widget):
+
+    def cerrar(self, **kwargs):
+        self.parent.parent.parent.dismiss()
+        for ch in self.parent.parent.parent.parent.children:
             if isinstance(ch, ScreenManager):
                 ch.current = 'Menu'
-    
+
+
+class Puntuacion(Label):
+    pass
+
+
 class Vacio (Widget):
     pass
+
 
 class InicialesInput(TextInput):
 
@@ -294,23 +282,7 @@ class JuegoApp(App):
         config.adddefaultsection('GamePlay')
         config.setdefault('GamePlay', 'Modo', '1')
         config.setdefault('GamePlay', 'Dificultad', '2')
-            
-            
+
+
 if __name__ == '__main__':
     JuegoApp().run()
-    
-
-
-#HOST = "localhost"
-        #PORT = 8888
-        #s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        #s.connect((HOST,PORT))
-
-        #dictData = {}
-        #dictData["cliente"] = "CLIENTE2"
-        #dictData["iniciales"] = self.ids.iniciales.text
-        #dictData["puntuacion"] = self.ids.score_f.text
-        #msg = json.dumps(dictData)
-        #time.sleep(2)
-
-        #s.send(msg)
