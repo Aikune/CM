@@ -99,14 +99,16 @@ class OpcionesScreen(Screen):
         self.manager.app.config.write()
 
 
+class Cuenta(Widget):
+    pass
+
 class GameScreen(Screen):
     num = 0
     score = ObjectProperty(None)
     go = None
 
     def on_pre_enter(self):
-        for ch in self.ids.layout.children:
-            self.ids.layout.remove_widget(ch)
+        self.ids.layout.clear_widgets()
 
     def on_enter(self):
         self.num = self.manager.app.config.getint('GamePlay', 'Dificultad')
@@ -116,6 +118,9 @@ class GameScreen(Screen):
         soundlib.s['env'].play()
         self.score = Score()
         self.ids.layout.add_widget(self.score)
+
+    def borrar_cuenta(self,*args):
+        self.ids.layout.remove_widget(self.cu)
 
     def fin(self, args):
         Clock.unschedule(self.lanzar)
@@ -129,14 +134,12 @@ class GameScreen(Screen):
 
     def on_pre_leave(self):
         Clock.unschedule(self.lanzar)
-        for ch in self.ids.layout.children:
-            self.ids.layout.remove_widget(ch)
+        self.ids.layout.clear_widgets()
         soundlib.s['env'].stop()
 
     def on_leave(self):
         Clock.unschedule(self.lanzar)
-        for ch in self.ids.layout.children:
-            self.ids.layout.remove_widget(ch)
+        self.ids.layout.clear_widgets()
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -161,6 +164,10 @@ class Game1Screen(GameScreen):
     def on_enter(self):
         super(Game1Screen, self).on_enter()
         self.ids.layout.add_widget(tanque.Tanque(center=(Window.center[0], Window.center[1])))
+        self.cu=Cuenta(center=(Window.center[0], Window.center[1]))
+        self.ids.layout.add_widget(self.cu)
+        self.cu.ids.num.center=(Window.center[0], Window.center[1])
+        Clock.schedule_once(self.borrar_cuenta, 2.7)
         self.iniciar()
 
     def posicion(self, *args):
@@ -171,7 +178,7 @@ class Game1Screen(GameScreen):
     def lanzar(self, *args):
         for x in range(0, self.num):
             self.ids.layout.add_widget(ovni.Ovni1(pos=self.posicion(), vel=self.velocidad()))
-        self.num = self.num + 1
+        self.num += 1
 
 
 class Game2Screen(GameScreen):
@@ -179,15 +186,19 @@ class Game2Screen(GameScreen):
     def on_enter(self):
         super(Game2Screen, self).on_enter()
         self.ids.layout.add_widget(tanque.TanqueMovil(pos=(Window.width / 2, 0)))
+        self.cu=Cuenta(center=(Window.center[0], Window.center[1]))
+        self.ids.layout.add_widget(self.cu)
+        self.cu.ids.num.center=(Window.center[0], Window.center[1])
+        Clock.schedule_once(self.borrar_cuenta, 2.7)
         self.iniciar()
 
     def posicion(self, *args):
-        return (random.randint(1, Window.width), Window.height)
+        return random.randint(1, Window.width), Window.height
 
     def lanzar(self, *args):
         for x in range(0, self.num):
             self.ids.layout.add_widget(ovni.Ovni2(pos=self.posicion(), vel=self.velocidad()))
-        self.num = self.num + 1
+        self.num += 1
 
 
 class GameOver (Popup):
